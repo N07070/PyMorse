@@ -22,7 +22,7 @@ A function to output the morse code to GPIO
 A function to capture morse code from GPIO
 """
 
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import re,time, os
 
 def get_user_text():
@@ -32,12 +32,22 @@ def get_user_text():
     return word_list
 
 
-def long_pulse():
-    os.system("ogg123 audio/long.ogg")
-
-def short_pulse():
-    os.system("ogg123 audio/short.ogg")
+def long_pulse(pin):
+    # os.system("ogg123 audio/long.ogg")
+    GPIO.output(pin,GPIO.HIGH)
+    print("-")
+    time.sleep(1)
+    GPIO.output(pin,GPIO.LOW) 
+	
+def short_pulse(pin):
+    # os.system("ogg123 audio/short.ogg")
+    GPIO.output(pin,GPIO.HIGH)
+    print(".")
+    time.sleep(0.5)
+    GPIO.output(pin,GPIO.LOW)
     
+
+
 def text_to_morse_code(alpha_text):
     morse_code = []
     for letter in alpha_text:
@@ -106,11 +116,11 @@ def text_to_morse_code(alpha_text):
 def broadcast_code(code_to_broadcast, pin):
     
     # Set the board as BOARD
-    #GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BOARD)
     print("Set the board to BOARD")
     
     # Setup the n th pin to OUTPUT
-    #GPIO.setup(pin, GPIO.OUT)
+    GPIO.setup(pin, GPIO.OUT)
     print("Set the "+str(pin)+"th to OUTPUT")
     
     # Starting the broadcast
@@ -119,28 +129,29 @@ def broadcast_code(code_to_broadcast, pin):
     
     for x in start_broadcast:
         if x == 1:
-            long_pulse()
+            long_pulse(pin)
         if x == 0:
-            short_pulse()
+            short_pulse(pin)
     
     print("Broadcasting")
     for number in code_to_broadcast:
         if number == '1':
-            long_pulse()
+            long_pulse(pin)
         if number == '0':
-            short_pulse()
+            short_pulse(pin)
+    
     #Boardcast end of transmission.
     print("Ending Boardcast")
     end_broadcast = [0,0,0,1,0,1]
     
     for y in end_broadcast:
         if y == 1:
-            long_pulse()
+            long_pulse(pin)
         if y == 0:
-            short_pulse()
+            short_pulse(pin)
 
     
-    #GPIO.cleanup()
+    GPIO.cleanup()
     print("Cleaned up the board.")
 
 def get_code_broadcast():
