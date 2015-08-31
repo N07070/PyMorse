@@ -26,8 +26,6 @@ A function to capture morse code from GPIO
 import re, time, os
 # This file contains the morse dictionnairy. Please feel free to add more translations to it ! :-)
 from morse_dict import *
-import sys
-sys.path.append("./lib/")
 # The FM lib
 import PiFm
 
