@@ -26,8 +26,10 @@ A function to capture morse code from GPIO
 import re, time, os
 # This file contains the morse dictionnairy. Please feel free to add more translations to it ! :-)
 from morse_dict import *
+import sys
+sys.path.append("./lib/")
 # The FM lib
-import lib/PiFm
+import PiFm
 
 def choose_mode(mode="1"):
     user_text = raw_input("Please choose the mode you want to use.\n1 - Broadcast\n2- Receive. >> ")
