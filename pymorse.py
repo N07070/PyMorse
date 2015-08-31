@@ -27,7 +27,7 @@ import re, time, os
 # This file contains the morse dictionnairy. Please feel free to add more translations to it ! :-)
 from morse_dict import *
 # The FM lib
-import PiFm
+import lib/PiFm
 
 def choose_mode(mode="1"):
     user_text = raw_input("Please choose the mode you want to use.\n1 - Broadcast\n2- Receive. >> ")
