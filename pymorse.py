@@ -9,15 +9,15 @@ A function to get the user text and remove all what's not needed
     * Consider é à è etc...
     * Consider punctuation
     * Consider Maj
-    
+
 1 for -
 0 for .
-    
+
 A function to translate the text to morse code
 
 A function to translate morse code to text
 
-A function to output the morse code to GPIO 
+A function to output the morse code to GPIO
 
 A function to capture morse code from GPIO
 """
@@ -26,6 +26,15 @@ A function to capture morse code from GPIO
 import re, time, os
 # This file contains the morse dictionnairy. Please feel free to add more translations to it ! :-)
 from morse_dict import *
+# The FM lib
+import PiFm
+
+def choose_mode(mode="1"):
+    user_text = raw_input("Please choose the mode you want to use.\n1 - Broadcast\n2- Receive. >> ")
+    if mode == 1:
+        get_user_text()
+    elif mode == 2:
+        pass
 
 def get_user_text():
     user_text = raw_input("Please enter the message you would like to broadcast. >> ")
@@ -35,14 +44,14 @@ def get_user_text():
 
 
 def long_pulse(pin):
-    #os.system("ogg123 audio/long.ogg")
+    PiFm.play_sound("audio/long.wav")
     #GPIO.output(pin,GPIO.HIGH)
     print("-")
     time.sleep(1)
     #GPIO.output(pin,GPIO.LOW)
 
 def short_pulse(pin):
-    #os.system("ogg123 audio/short.ogg")
+    PiFm.play_sound("audio/short.wav")
     #GPIO.output(pin,GPIO.HIGH)
     print(".")
     time.sleep(0.5)
@@ -55,9 +64,9 @@ def short_gap():
 def long_gap():
     print("Long gap")
     time.sleep(3.5)
-	
 
-    
+
+
 
 
 def text_to_morse_code(alpha_text):
@@ -74,25 +83,25 @@ def text_to_morse_code(alpha_text):
     return morse_code
 
 def broadcast_code(code_to_broadcast, pin):
-    
+
     # Set the board as BOARD
     #GPIO.setmode(GPIO.BOARD)
     print("Set the board to BOARD")
-    
+
     # Setup the n th pin to OUTPUT
     #GPIO.setup(pin, GPIO.OUT)
     print("Set the "+str(pin)+"th to OUTPUT")
-    
+
     # Starting the broadcast
     print("\n===================\nStarting Broadcast\n===================\n")
     start_broadcast = [0,1,0,1]
-    
+
     for x in start_broadcast:
         if x == 1:
             long_pulse(pin)
         if x == 0:
             short_pulse(pin)
-    
+
     print("\n===================\nBroadcasting\n===================\n")
     for number in code_to_broadcast:
         if number == '1':
@@ -105,18 +114,18 @@ def broadcast_code(code_to_broadcast, pin):
         # Between words
         elif number == '3':
             long_gap()
-    
+
     #Boardcast end of transmission.
     print("\n===================\nEnding Broadcast\n===================\n")
     end_broadcast = [0,0,0,1,0,1]
-    
+
     for y in end_broadcast:
         if y == 1:
             long_pulse(pin)
         if y == 0:
             short_pulse(pin)
 
-    
+
     #GPIO.cleanup()
     print("Cleaned up the board.")
 
@@ -130,8 +139,8 @@ if __name__ == '__main__':
     code = get_user_text()
     code = text_to_morse_code(code)
     broadcast_code(code,7)
-    
-    
+
+
 """
 # Todo
 def morse_code_to_text(morse_code):
